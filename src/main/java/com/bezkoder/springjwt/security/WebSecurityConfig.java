@@ -23,6 +23,8 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.List;
 
+import static org.springframework.http.CacheControl.maxAge;
+
 @Configuration
 @EnableMethodSecurity
 
@@ -86,6 +88,7 @@ public class WebSecurityConfig { // extends WebSecurityConfigurerAdapter {
     configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
     configuration.setAllowedHeaders(List.of("*"));
     configuration.setAllowCredentials(true);
+//    configuration.maxAge(3600);
 
     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
     source.registerCorsConfiguration("/**", configuration);
