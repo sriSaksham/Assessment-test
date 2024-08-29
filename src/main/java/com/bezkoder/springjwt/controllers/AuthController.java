@@ -41,7 +41,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class AuthController {
   @Autowired
   AuthenticationManager authenticationManager;
-
+//new
   @Autowired
   UserRepository userRepository;
 
