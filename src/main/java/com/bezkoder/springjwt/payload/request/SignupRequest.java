@@ -18,11 +18,12 @@ public class SignupRequest {
 
   @NotBlank(message = "Password is mandatory")
   @Size(min = 8, max = 40)
-  @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=]).*$",
+  @Pattern(regexp = "^(?=.[0-9])(?=.[a-z])(?=.[A-Z])(?=.[@#$%^&+=]).*$",
           message = "Password must contain at least one digit, one lowercase letter, one uppercase letter, and one special character")
   private String password;
+
   @NotBlank
-  @Size(max = 20)
+  @Size(min = 12, max =12)
   private String aadharPan;
 
   @NotBlank(message = "First name is mandatory")
@@ -34,14 +35,13 @@ public class SignupRequest {
   private String lastName;
 
   @NotBlank(message = "Phone number is mandatory")
-  @Size(max = 15)
+  @Size(min = 10, max = 10)
   private String phoneNumber;
 
-  public @NotBlank @Size(max = 20) String getAadharPan() {
+  public  String getAadharPan() {
     return aadharPan;
   }
-
-  public void setAadharPan(@NotBlank @Size(max = 20) String aadharPan) {
+  public void setAadharPan(String aadharPan) {
     this.aadharPan = aadharPan;
   }
 
@@ -77,19 +77,18 @@ public class SignupRequest {
     this.role = role;
   }
 
-  public @NotBlank @Size(max = 50) String getFirstName() {
+  public String getFirstName() {
     return firstName;
   }
 
-  public void setFirstName(@NotBlank @Size(max = 50) String firstName) {
+  public void setFirstName(String firstName) {
     this.firstName = firstName;
   }
-
-  public @NotBlank @Size(max = 50) String getLastName() {
+  public String getLastName() {
     return lastName;
   }
 
-  public void setLastName(@NotBlank @Size(max = 50) String lastName) {
+  public void setLastName(String lastName) {
     this.lastName = lastName;
   }
 
@@ -99,5 +98,6 @@ public class SignupRequest {
 
   public void setPhoneNumber(String phoneNumber) {
     this.phoneNumber = phoneNumber;
-  }
 }
+}
+
