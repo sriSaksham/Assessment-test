@@ -26,6 +26,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -62,6 +64,7 @@ public class AuthController {
 
   @PostMapping("/login")
   public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
+    try{
 
     // Authenticate the user using either username or email
     Authentication authentication = authenticationManager.authenticate(
@@ -85,52 +88,17 @@ public class AuthController {
             userDetails.getUsername(),
             userDetails.getEmail(),
             roles));
+    } catch (BadCredentialsException e) {
+      // Handle invalid username/password
+      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password.");
+    } catch (DisabledException e) {
+      // Handle disabled accounts
+      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User account is disabled.");
+    } catch (Exception e) {
+      // Handle any other errors
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while processing the login request.");
+    }
   }
-
-//  @PostMapping("/signup")
-//  public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
-//    if (userRepository.existsByUsername(signUpRequest.getUsername())) {
-//      return ResponseEntity
-//              .badRequest()
-//              .body(new MessageResponse("Error: Username is already taken!"));
-//    }
-//
-//    if (userRepository.existsByEmail(signUpRequest.getEmail())) {
-//      return ResponseEntity
-//              .badRequest()
-//              .body(new MessageResponse("Error: Email is already in use!"));
-//    }
-//
-//    // Create new user's account
-//    User user = new User(signUpRequest.getUsername(),
-//            signUpRequest.getEmail(),
-//            encoder.encode(signUpRequest.getPassword()));
-//
-//    user.setFirstName(signUpRequest.getFirstName());
-//    user.setLastName(signUpRequest.getLastName());
-//    user.setPhoneNumber(signUpRequest.getPhoneNumber());
-//
-//    user.setActivityStatus("INACTIVE");
-//
-//    // Assign default role
-//    Set<Role> roles = new HashSet<>();
-//    Role userRole = roleRepository.findByName(ERole.ROLE_USER)
-//            .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-//    roles.add(userRole);
-//
-//    user.setRoles(roles);
-//    userRepository.save(user);
-//
-//    // Send email after successful registration
-//    String subject = "Registration Successful";
-//    String body = "Dear " + user.getFirstName() + " " + user.getLastName() + ",\n\n" +
-//            "Your registration was successful.\n\n" +
-//            "Best regards,\nEduTech Team";
-//
-//    emailService.sendEmail(user.getEmail(), subject, body);
-//
-//    return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
-//  }
 
   @PostMapping("/signup")
   public ResponseEntity<?> registerUser(
